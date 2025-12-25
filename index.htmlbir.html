@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Таблица умножения</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 10px;
+    background: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 520px;
+}
+
+td {
+    border: 3px solid red;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+td:active {
+    transform: scale(0.9);
+}
+
+/* Верх */
+.top {
+    background: red;
+}
+
+/* Левая колонка */
+.left1 { background: #baffc9; }
+.left2 { background: #bae1ff; }
+.left3 { background: #ffb3ba; }
+.left4 { background: #ffffba; }
+.left5 { background: #ffdfba; }
+.left6 { background: #caffbf; }
+.left7 { background: #9bf6ff; }
+.left8 { background: #bdb2ff; }
+.left9 { background: #ffc6ff; }
+.left10 { background: #ffd6a5; }
+
+/* Строки */
+.r1 { background: #baffc9; }
+.r2 { background: #bae1ff; }
+.r3 { background: #ffb3ba; }
+.r4 { background: #ffffba; }
+.r5 { background: #ffdfba; }
+.r6 { background: #caffbf; }
+.r7 { background: #9bf6ff; }
+.r8 { background: #bdb2ff; }
+.r9 { background: #ffc6ff; }
+.r10 { background: #ffd6a5; }
+</style>
+</head>
+
+<body>
+
+<table id="table"></table>
+
+<script>
+const table = document.getElementById("table");
+
+/* числа словами */
+function numToWord(n) {
+    const ones = [
+        "ноль","один","два","три","четыре",
+        "пять","шесть","семь","восемь","девять",
+        "десять","одиннадцать","двенадцать","тринадцать",
+        "четырнадцать","пятнадцать","шестнадцать",
+        "семнадцать","восемнадцать","девятнадцать"
+    ];
+    const tens = [
+        "", "", "двадцать","тридцать","сорок",
+        "пятьдесят","шестьдесят","семьдесят",
+        "восемьдесят","девяносто"
+    ];
+    if (n < 20) return ones[n];
+    if (n < 100) {
+        return tens[Math.floor(n / 10)] + (n % 10 ? " " + ones[n % 10] : "");
+    }
+    return "сто";
+}
+
+/* звук */
+function speak(text) {
+    speechSynthesis.cancel();
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "ru-RU";
+    msg.rate = 0.8;
+    msg.pitch = 1.2;
+    speechSynthesis.speak(msg);
+}
+
+/* верхняя строка */
+let tr = document.createElement("tr");
+tr.appendChild(document.createElement("td"));
+
+for (let i = 1; i <= 10; i++) {
+    let td = document.createElement("td");
+    td.textContent = i;
+    td.className = "top";
+    td.addEventListener("click", () => speak(numToWord(i)));
+    tr.appendChild(td);
+}
+table.appendChild(tr);
+
+/* таблица */
+for (let i = 1; i <= 10; i++) {
+    let tr = document.createElement("tr");
+
+    let left = document.createElement("td");
+    left.textContent = i + "×";
+    left.className = "left" + i;
+    left.addEventListener("click", () => speak(numToWord(i) + " умножить"));
+    tr.appendChild(left);
+
+    for (let j = 1; j <= 10; j++) {
+        let td = document.createElement("td");
+        td.textContent = i * j;
+        td.className = "r" + i;
+        td.addEventListener("click", () =>
+            speak(
+                numToWord(i) +
+                " умножить на " +
+                numToWord(j) +
+                " равно " +
+                numToWord(i * j)
+            )
+        );
+        tr.appendChild(td);
+    }
+    table.appendChild(tr);
+}
+</script>
+
+</body>
+</html>
